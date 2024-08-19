@@ -12,7 +12,8 @@ local function setup()
           "syntax match CoffeeKeyword '\\<\\(if\\|else\\|for\\|in\\|switch\\|of\\|when\\|while\\|return\\|class\\|extends\\|super\\|this\\|constructor\\)\\>'"
         )
         vim.api.nvim_command("syntax match CoffeeFunction '\\<\\(function\\|->\\|=>\\)\\>'")
-        vim.api.nvim_command('syntax match CoffeeString \'"[^"]*"\'')
+        vim.api.nvim_command("syntax match CoffeeString /'[^']*'\\|\"[^\"]*\"/")
+
         vim.api.nvim_command("syntax match CoffeeNumber '\\<[0-9]\\+\\(\\.[0-9]\\+\\)?\\>'")
         vim.api.nvim_command("syntax match CoffeeBoolean '\\<true\\|false\\>'")
         vim.api.nvim_command("syntax match CoffeeVariable '@\\w\\+'")
@@ -39,11 +40,18 @@ local function setup()
         vim.api.nvim_set_hl(0, "CoffeeArrowFunction", { fg = "#4682B4", ctermfg = 33 }) -- Example color for arrows
 
         -- Highlight arrows separately
-        vim.api.nvim_command("syntax match CoffeeArrowFunction '->'")
+        vim.api.nvim_command("syntax match CoffeeArrowFunction '->\\|=>'")
+
         -- Define colors for log levels
         vim.api.nvim_set_hl(0, "CoffeeLogError", { fg = "#FF6347", ctermfg = 9 }) -- Tomato (Red) for log.e
         vim.api.nvim_set_hl(0, "CoffeeLogWarning", { fg = "#FFA500", ctermfg = 214 }) -- Orange for log.w
         vim.api.nvim_set_hl(0, "CoffeeLogInfo", { fg = "#4682B4", ctermfg = 33 }) -- Steel Blue for log.i
+
+        -- Add folding settings for CoffeeScript
+        vim.cmd([[syntax region coffeeFold start=/\vdefine/ end=/->/ fold]])
+        vim.api.nvim_command("setlocal foldmethod=syntax")
+        -- Close all folds automatically after the file is loaded
+        vim.cmd("normal! zM")
       end, 50)
     end,
   })
