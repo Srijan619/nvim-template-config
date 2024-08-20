@@ -8,10 +8,10 @@ local function setup()
       vim.defer_fn(function()
         -- Syntax highlighting for CoffeeScript
         vim.api.nvim_command(
-          "syntax match CoffeeKeyword '\\<\\(if\\|else\\|is\\|isnt\\|or\\|and\\|for\\|in\\|switch\\|of\\|when\\|while\\|return\\|class\\|extends\\|super\\|this\\|constructor\\)\\>'"
+          "syntax match CoffeeKeyword '\\<\\(if\\|else\\|is\\|isnt\\|or\\|and\\|for\\|in\\|switch\\|of\\|when\\|while\\|try\\|catch\\|then\\|return\\|class\\|extends\\|super\\|this\\|constructor\\)\\>'"
         )
         -- Match function prefixes, but ensure they are not inside strings or comments main functions like _doSomething: () ->
-        vim.api.nvim_command("syntax match CoffeeFunctionPrefix /[^:]*:\\s*/ contained")
+        vim.api.nvim_command("syntax match CoffeeFunctionPrefix /^\\s*\\(\\S\\)\\S*\\s*:\\ze\\s*/") -- ensure functions like pattern doesn't start in the comment block
         vim.api.nvim_command("syntax match CoffeeSubFunctionPrefix /\\v\\.\\zs[^() \\t\\n]*\\ze\\(/") -- Array.push() like
         vim.api.nvim_command("syntax match CoffeeString /'[^']*'\\|\"[^\"]*\"/")
 

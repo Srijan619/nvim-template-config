@@ -9,6 +9,7 @@ define [
  ) ->
 
 
+something: works
 # TODO 
 # Returns: Some todo here.... (something to do here) { something not } #{something} 
 
@@ -45,7 +46,12 @@ class Example
       log.w "This is a warning"
       log.i "This is info"
     return something iframe 
+    
+    try 
+      dosomething
 
+    catch
+      Exception
     # Create a map where key is handlebar expression and value is a set of component configs and its handlebars template
     # For example:
     # {
