@@ -50,6 +50,7 @@ require("lazy").setup({
         require("colorizer").setup()
       end,
     },
+    { import = "plugins.vue" },
     -- { import = "plugins" },
   },
   defaults = {
