@@ -41,6 +41,15 @@ require("lazy").setup({
         require("plugins.coffeescript").setup()
       end,
     },
+    {
+      "f-person/git-blame.nvim",
+    },
+    {
+      "norcalli/nvim-colorizer.lua",
+      config = function()
+        require("colorizer").setup()
+      end,
+    },
     -- { import = "plugins" },
   },
   defaults = {
