@@ -10,7 +10,8 @@ local function setup()
         vim.api.nvim_command(
           "syntax match CoffeeKeyword '\\<\\(if\\|else\\|is\\|isnt\\|or\\|and\\|for\\|in\\|switch\\|of\\|when\\|while\\|return\\|class\\|extends\\|super\\|this\\|constructor\\)\\>'"
         )
-        vim.api.nvim_command("syntax match CoffeeFunctionPrefix /[^:]*:\\s*/") -- main functions like _doSomething: () ->
+        -- Match function prefixes, but ensure they are not inside strings or comments main functions like _doSomething: () ->
+        vim.api.nvim_command("syntax match CoffeeFunctionPrefix /[^:]*:\\s*/ contained")
         vim.api.nvim_command("syntax match CoffeeSubFunctionPrefix /\\v\\.\\zs[^() \\t\\n]*\\ze\\(/") -- Array.push() like
         vim.api.nvim_command("syntax match CoffeeString /'[^']*'\\|\"[^\"]*\"/")
 
@@ -32,9 +33,9 @@ local function setup()
         vim.api.nvim_command("syntax match CoffeeSquareBrackets /\\v\\[|\\]/")
 
         -- Interpolation
-        vim.api.nvim_command("syntax match CoffeeInterpolation /#{}/")
+        vim.api.nvim_command("syntax match CoffeeInterpolation /#{[^}]*}/ containedin=CoffeeString")
+        vim.api.nvim_command("syntax match CoffeeInterpolationText /#{\\zs[^}]*\\ze}/ containedin=CoffeeInterpolation")
         -- Define colors for the syntax groups using extracted values
-        vim.api.nvim_set_hl(0, "CoffeeComment", { fg = "#6f6f6f", ctermfg = 243 })
         vim.api.nvim_set_hl(0, "CoffeeKeyword", { fg = "#A390FF", ctermfg = 141 })
         vim.api.nvim_set_hl(0, "CoffeeFunctionPrefix", { fg = "#cdf861", ctermfg = 154 })
         vim.api.nvim_set_hl(0, "CoffeeSubFunctionPrefix", { fg = "#66cdaa", ctermfg = 114 })
@@ -42,12 +43,13 @@ local function setup()
         vim.api.nvim_set_hl(0, "CoffeeNumber", { fg = "#b5cea8", ctermfg = 155 })
         vim.api.nvim_set_hl(0, "CoffeeBoolean", { fg = "#569cd6", ctermfg = 81 })
         vim.api.nvim_set_hl(0, "CoffeeVariable", { fg = "#9cdcfe", ctermfg = 81 })
-
+        vim.api.nvim_set_hl(0, "CoffeeComment", { fg = "#6f6f6f", ctermfg = 243 })
         --vim.api.nvim_set_hl(0, "CoffeeParamInside", { fg = "#fcb34c", ctermfg = 214 }) -- Dynamic function calls
         vim.api.nvim_set_hl(0, "CoffeeParenthesesBrackets", { fg = "#de7cb0", ctermfg = 204 })
         vim.api.nvim_set_hl(0, "CoffeeCurlyBrackets", { fg = "#de7cb0", ctermfg = 204 })
         vim.api.nvim_set_hl(0, "CoffeeSquareBrackets", { fg = "#de7cb0", ctermfg = 204 })
         vim.api.nvim_set_hl(0, "CoffeeInterpolation", { fg = "#de7cb0", ctermfg = 204 })
+        vim.api.nvim_set_hl(0, "CoffeeInterpolationText", { fg = "#A390FF", ctermfg = 141 })
 
         -- Add specific highlighting for arrow functions
         vim.api.nvim_set_hl(0, "CoffeeArrowFunction", { fg = "#b3e8b4", ctermfg = 151 }) -- Example color for arrows

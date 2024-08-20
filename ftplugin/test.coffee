@@ -26,13 +26,18 @@ class Example
     _isComponentTypeVueV2: (componentType) =>
       componentType is "vueComponent_v2"
       {} 
-      [array1, something]. includes 
+      [array1, something].includes(me) 
     switch action
       when 'open-url'
 
     comment :wq
     # String interpolation is
-    #{Something here}
+    
+
+    "#{Something}-something-id" # This is a fine case
+    
+    target = "#{protocol}:#{target}"
+
     2
     if something then
       somethig
