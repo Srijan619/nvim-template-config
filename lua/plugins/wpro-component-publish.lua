@@ -6,10 +6,8 @@ local function expand_home_directory(path)
   return path
 end
 
--- Path to your Node.js script with home directory expansion
 local script_path = expand_home_directory("~/workspace/raw/wpro-component-publisher-agnostic/publish.js")
 
--- Lua function to get the latest YAML file from the dist directory
 local function get_latest_yaml_file()
   local cwd = vim.fn.getcwd()
   local dist_path = cwd .. "/dist"
@@ -71,5 +69,4 @@ end, {
   complete = "file",
 })
 
--- Optional: Map a key combination to run the command
 vim.api.nvim_set_keymap("n", "<leader>pwc", ":PublishWellmoComponent ", { noremap = true, silent = false })
