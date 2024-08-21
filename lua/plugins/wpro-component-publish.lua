@@ -24,8 +24,16 @@ local function get_latest_yaml_file()
     return nil
   end
 
-  -- Trim trailing newline
-  return output:gsub("%s+$", "")
+  -- Validate if output is an actual file path
+  output = output:gsub("%s+$", "") -- Trim trailing newline
+
+  -- Ensure the output points to a valid file
+  if vim.fn.filereadable(output) == 0 then
+    vim.api.nvim_err_writeln("No YAML file found at path: " .. output)
+    return nil
+  end
+
+  return output
 end
 
 -- Lua function to run the Node.js script
@@ -37,7 +45,6 @@ local function run_publish_script(yaml_file_path)
 
   -- Check if the file path is valid
   if not yaml_file_path or yaml_file_path == "" then
-    vim.api.nvim_err_writeln("No valid YAML file path found.")
     return
   end
 
