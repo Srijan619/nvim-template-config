@@ -64,33 +64,7 @@ require("lazy").setup({
       end,
     },
     { import = "plugins.vue" },
-    {
-      "jose-elias-alvarez/null-ls.nvim",
-      config = function()
-        local null_ls = require("null-ls")
-
-        null_ls.setup({
-          sources = {
-            null_ls.builtins.formatting.prettier.with({
-              -- Automatically use local Prettier config if available
-              extra_args = { "--config-precedence", "prefer-file" },
-            }),
-          },
-          on_attach = function(client, bufnr)
-            if client.supports_method("textDocument/formatting") then
-              -- Format on save
-              vim.api.nvim_create_autocmd("BufWritePre", {
-                group = vim.api.nvim_create_augroup("LspFormatting", { clear = true }),
-                buffer = bufnr,
-                callback = function()
-                  vim.lsp.buf.format({ bufnr = bufnr })
-                end,
-              })
-            end
-          end,
-        })
-      end,
-    },
+    { import = "plugins.react" },
     -- { import = "plugins" },
   },
   defaults = {
