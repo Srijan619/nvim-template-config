@@ -1,4 +1,4 @@
--- NOTE: Make sure typescript , typescript-language-server, typescript-language-server  and prettier is installed either locally in the workspace or globally
+-- NOTE: Make sure typescript , typescript-language-server and prettier is installed either locally in the workspace or globally
 
 -- Define a function to set fold level based on line count
 local function set_fold_based_on_line_count()
@@ -96,12 +96,12 @@ return {
   -- Snippets
   { "L3MON4D3/LuaSnip" },
   { "rafamadriz/friendly-snippets" },
-
-  -- Formatter using null-ls
   {
     "jose-elias-alvarez/null-ls.nvim",
     config = function()
       local null_ls = require("null-ls")
+
+      -- Setup null-ls
       null_ls.setup({
         sources = {
           null_ls.builtins.formatting.prettier.with({
@@ -109,6 +109,21 @@ return {
           }),
         },
         on_attach = function(client, bufnr)
+          -- Add auto-format on save
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            buffer = bufnr, -- Only apply to the current buffer
+            callback = function()
+              -- Check if the client supports document formatting
+              if client.server_capabilities.documentFormattingProvider then
+                -- Safely call formatting
+                pcall(function()
+                  vim.lsp.buf.format({ async = true })
+                end)
+              end
+            end,
+          })
+
+          -- Set keymap for manual formatting
           if client.server_capabilities.documentFormattingProvider then
             vim.api.nvim_buf_set_keymap(
               bufnr,
