@@ -6,7 +6,9 @@ local function expand_home_directory(path)
   return path
 end
 
-local script_path = expand_home_directory("~/workspace/raw/wpro-component-publisher-agnostic/publish.js")
+local script_path_dir = expand_home_directory("~/workspace/raw/wpro-component-publisher-agnostic/")
+local script_path = expand_home_directory(script_path_dir .. "publish.js")
+local env_path = expand_home_directory(script_path_dir .. ".env")
 
 local function get_latest_yaml_file()
   local cwd = vim.fn.getcwd()
@@ -48,7 +50,12 @@ local function run_publish_script(yaml_file_path)
 
   -- Ensure the file path is properly quoted
   local quoted_yaml_file_path = vim.fn.shellescape(yaml_file_path)
-  local cmd = string.format("node --env-file='.env' %s %s", vim.fn.shellescape(script_path), quoted_yaml_file_path)
+  local cmd = string.format(
+    "node %s %s %s",
+    "--env-file=" .. vim.fn.shellescape(env_path),
+    vim.fn.shellescape(script_path),
+    quoted_yaml_file_path
+  )
 
   -- Run the command
   local output = vim.fn.system(cmd)
