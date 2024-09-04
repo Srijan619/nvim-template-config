@@ -48,7 +48,7 @@ local function run_publish_script(yaml_file_path)
 
   -- Ensure the file path is properly quoted
   local quoted_yaml_file_path = vim.fn.shellescape(yaml_file_path)
-  local cmd = string.format("node %s %s", vim.fn.shellescape(script_path), quoted_yaml_file_path)
+  local cmd = string.format("node --env-file='.env' %s %s", vim.fn.shellescape(script_path), quoted_yaml_file_path)
 
   -- Run the command
   local output = vim.fn.system(cmd)
