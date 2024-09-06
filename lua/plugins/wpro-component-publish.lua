@@ -91,8 +91,9 @@ local function run_publish_script(yaml_file_path)
 
   -- Output the result
   vim.api.nvim_out_write("------------------------------------------------\n")
-  vim.api.nvim_out_write("Output from publish script:\n" .. output .. "\n")
   vim.api.nvim_out_write("Tip: Make sure you are using node version greater than 20.0.6\n")
+  vim.api.nvim_out_write("------------------------------------------------\n")
+  vim.api.nvim_out_write("Output from publish script:\n" .. output .. "\n")
   vim.api.nvim_out_write("------------------------------------------------\n")
 
   local exit_code = vim.v.shell_error
