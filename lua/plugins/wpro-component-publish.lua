@@ -84,12 +84,20 @@ local function run_publish_script(yaml_file_path)
     quoted_yaml_file_path
   )
 
-  -- Run the command
-  local output = vim.fn.system(cmd)
+  -- Run the command and capture the output and exit code
+  local handle = io.popen(cmd .. " 2>&1") -- Redirect stderr to stdout
+  local output = handle:read("*a")
+  handle:close()
+
+  -- Output the result
+  vim.api.nvim_out_write("------------------------------------------------\n")
+  vim.api.nvim_out_write("Output from publish script:\n" .. output .. "\n")
+  vim.api.nvim_out_write("------------------------------------------------\n")
+
   local exit_code = vim.v.shell_error
 
   if exit_code ~= 0 then
-    vim.api.nvim_err_writeln("Failed to run publish script. Check your script and file path.\n" .. output)
+    vim.api.nvim_err_writeln("Failed to run publish script. Check your script and file path.\n")
   else
     vim.api.nvim_out_write("Publish script executed successfully.\n")
   end
