@@ -36,11 +36,35 @@ local function get_latest_yaml_file()
   return output
 end
 
+--Function to build the component first
+
+local function npm_run_build_comp(build_dir)
+  if not build_dir or build_dir == "" then
+    build_dir = vim.fn.getcwd()
+  end
+
+  if not build_dir or build_dir == "" then
+    return
+  end
+
+  local result = vim.fn.system("npm run build", build_dir)
+
+  local exit_code = vim.v.shell_error
+
+  if exit_code == 0 then
+    vim.api.nvim_out_write(string.format("Npm run build executed in : %s \n", build_dir))
+  else
+    vim.api.nvim_err_writeln("Failed to run build command. Check your script and file path.\n" .. result)
+  end
+end
+
 -- Lua function to run the Node.js script
 local function run_publish_script(yaml_file_path)
   -- Determine the YAML file path to use
   if not yaml_file_path or yaml_file_path == "" then
     yaml_file_path = get_latest_yaml_file()
+  else
+    yaml_file_path = yaml_file_path .. "/dist"
   end
 
   -- Check if the file path is valid
@@ -50,6 +74,9 @@ local function run_publish_script(yaml_file_path)
 
   -- Ensure the file path is properly quoted
   local quoted_yaml_file_path = vim.fn.shellescape(yaml_file_path)
+
+  vim.api.nvim_out_write(string.format("Using dist yaml file: %s \n", quoted_yaml_file_path))
+
   local cmd = string.format(
     "node %s %s %s",
     "--env-file=" .. vim.fn.shellescape(env_path),
@@ -70,6 +97,7 @@ end
 
 -- Create a custom Neovim command to run the script
 vim.api.nvim_create_user_command("PublishWellmoComponent", function(opts)
+  npm_run_build_comp(opts.args)
   run_publish_script(opts.args)
 end, {
   nargs = "?", -- Make the argument optional
