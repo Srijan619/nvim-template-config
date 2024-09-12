@@ -15,13 +15,14 @@ local function set_fold_based_on_line_count()
 end
 
 -- Create an autocmd group to apply this setting when a file is read
-vim.api.nvim_create_augroup("CustomFoldLevel", { clear = true })
+--vim.api.nvim_create_augroup("CustomFoldLevel", { clear = true })
 
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-  group = "CustomFoldLevel",
-  pattern = "*",
-  callback = set_fold_based_on_line_count,
-})
+--vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+--group = "CustomFoldLevel",
+--pattern = "*",
+--callback = set_fold_based_on_line_count,
+--})
+--
 
 return {
   -- Syntax highlighting for JavaScript and TypeScript
