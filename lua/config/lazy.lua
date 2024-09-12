@@ -63,6 +63,7 @@ require("lazy").setup({
         vim.cmd("colorscheme github_dark_dimmed")
       end,
     },
+    { import = "plugins.fold" },
     { import = "plugins.vue" },
     { import = "plugins.react" },
     -- { import = "plugins" },
