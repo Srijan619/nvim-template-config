@@ -8,34 +8,22 @@ return {
     -- Define on_attach function
     local on_attach = function(client, bufnr)
       local buf_set_option = vim.api.nvim_buf_set_option
-      local opts = { noremap = true, silent = true }
-
       -- Enable completion triggered by <c-x><c-o>
       buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
-      -- Define key mappings
-      local mappings = {
-        g = {
-          d = { "<cmd>lua vim.lsp.buf.definition()<CR>", "Go to Definition" },
-          r = { "<cmd>lua vim.lsp.buf.references()<CR>", "References" },
-          i = { "<cmd>lua vim.lsp.buf.implementation()<CR>", "Implementations" },
-        },
-        r = {
-          n = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename" },
-          a = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code Action" },
-        },
-        f = { "<cmd>lua vim.lsp.buf.formatting()<CR>", "Format" },
-        d = {
-          s = { "<cmd>lua vim.lsp.buf.document_symbol()<CR>", "Document Symbols" },
-          w = { "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", "Workspace Symbols" },
-        },
-        e = { "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", "Show Diagnostics" },
-        ["[d"] = { "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", "Previous Diagnostic" },
-        ["]d"] = { "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", "Next Diagnostic" },
-      }
-
-      -- Register the key mappings with which-key
-      wk.register(mappings, { buffer = bufnr, prefix = "<leader>" })
+      wk.add({
+        { "<leader>gd", "<cmd>lua vim.lsp.buf.definition()<CR>", desc = "Go to Definition" },
+        { "<leader>gr", "<cmd>lua vim.lsp.buf.references()<CR>", desc = "References" },
+        { "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", desc = "Implementations" },
+        { "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", desc = "Rename" },
+        { "<leader>ra", "<cmd>lua vim.lsp.buf.code_action()<CR>", desc = "Code Action" },
+        { "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", desc = "Format" },
+        { "<leader>ds", "<cmd>lua vim.lsp.buf.document_symbol()<CR>", desc = "Document Symbols" },
+        { "<leader>dw", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", desc = "Workspace Symbols" },
+        { "<leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", desc = "Show Diagnostics" },
+        { "<leader>[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", desc = "Previous Diagnostic" },
+        { "<leader>]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", desc = "Next Diagnostic" },
+      }, { buffer = bufnr })
     end
 
     lspconfig.tsserver.setup({
