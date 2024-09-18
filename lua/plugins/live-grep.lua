@@ -1,23 +1,8 @@
--- Live grep extended with args enabled
-
-local live_grep_in_glob = function(glob_pattern)
-  require("telescope.builtin").live_grep({
-    vimgrep_arguments = {
-      "rg",
-      "--color=never",
-      "--no-heading",
-      "--with-filename",
-      "--line-number",
-      "--column",
-      "--smart-case",
-      "--glob=" .. (glob_pattern or ""),
-    },
-  })
-end
-
-live_grep_prompt = function()
-  vim.ui.input({ prompt = "Glob: ", completion = "file", default = "**/*." }, live_grep_in_glob)
-end
-
--- Bind to Leader+s
-vim.api.nvim_set_keymap("n", "<Leader>s.", "<Cmd>lua live_grep_prompt()<CR>", { noremap = true, silent = true })
+return {
+  "nvim-telescope/telescope-live-grep-args.nvim",
+  dependencies = { "nvim-telescope/telescope.nvim" },
+  config = function()
+    -- Load the telescope live_grep_args extension
+    require("telescope").load_extension("live_grep_args")
+  end,
+}

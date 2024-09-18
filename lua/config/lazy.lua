@@ -66,6 +66,7 @@ require("lazy").setup({
     { import = "plugins.fold" },
     { import = "plugins.vue" },
     { import = "plugins.react" },
+    { import = "plugins.live-grep" },
     -- { import = "plugins" },
   },
   defaults = {
