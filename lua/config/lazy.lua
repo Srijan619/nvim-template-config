@@ -67,6 +67,7 @@ require("lazy").setup({
     { import = "plugins.vue" },
     { import = "plugins.react" },
     { import = "plugins.live-grep" },
+    { import = "plugins.lspconfig" },
     -- { import = "plugins" },
   },
   defaults = {
