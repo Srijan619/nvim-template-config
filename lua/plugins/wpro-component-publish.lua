@@ -47,7 +47,8 @@ local function npm_run_build_comp(build_dir)
     return
   end
 
-  local result = vim.fn.system("npm run build", build_dir)
+  local command = string.format("bash -i -c 'nvm use 14 && npm run build'")
+  local result = vim.fn.system(command, build_dir)
 
   local exit_code = vim.v.shell_error
 
