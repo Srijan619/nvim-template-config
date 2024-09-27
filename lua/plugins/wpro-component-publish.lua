@@ -79,13 +79,12 @@ local function run_publish_script(yaml_file_path)
   vim.api.nvim_out_write(string.format("Using dist yaml file: %s \n", quoted_yaml_file_path))
 
   local cmd = string.format(
-    "node %s %s %s",
+    "bash -i -c 'nvm use 20 && node %s %s %s'",
     "--env-file=" .. vim.fn.shellescape(env_path),
     vim.fn.shellescape(script_path),
     quoted_yaml_file_path
   )
 
-  -- Run the command and capture the output and exit code
   local handle = io.popen(cmd .. " 2>&1") -- Redirect stderr to stdout
   local output = handle:read("*a")
   handle:close()
