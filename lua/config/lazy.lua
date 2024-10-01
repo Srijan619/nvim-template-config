@@ -75,6 +75,14 @@ require("lazy").setup({
         vim.cmd("colorscheme kanagawa")
       end,
     },
+    {
+      "jiaoshijie/undotree",
+      dependencies = "nvim-lua/plenary.nvim",
+      config = true,
+      keys = {
+        { "<S-u>", "<cmd>lua require('undotree').toggle()<CR>", mode = "n" }, -- Normal mode mapping
+      },
+    },
     ---
     { import = "plugins.fold" },
     { import = "plugins.vue" },
