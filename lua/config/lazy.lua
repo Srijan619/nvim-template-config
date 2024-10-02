@@ -85,8 +85,7 @@ require("lazy").setup({
     },
     ---
     { import = "plugins.fold" },
-    { import = "plugins.vue" },
-    { import = "plugins.react" },
+    { import = "plugins.frontend" },
     { import = "plugins.live-grep" },
     { import = "plugins.lspconfig" },
     -- { import = "plugins" },

@@ -46,9 +46,7 @@ return {
       -- Setup null-ls
       null_ls.setup({
         sources = {
-          null_ls.builtins.formatting.prettier.with({
-            filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "json", "html", "css" },
-          }),
+          null_ls.builtins.formatting.prettier,
         },
         on_attach = function(client, bufnr)
           -- Add auto-format on save
