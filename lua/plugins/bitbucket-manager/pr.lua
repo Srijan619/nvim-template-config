@@ -1,5 +1,36 @@
 local Job = require("plenary.job")
 local utils = require("plugins.bitbucket-manager.utils")
+local finders = require("telescope.finders")
+
+function tprint(tbl, indent)
+  if not indent then
+    indent = 0
+  end
+  for k, v in pairs(tbl) do
+    formatting = string.rep("  ", indent) .. k .. ": "
+    if type(v) == "table" then
+      print(formatting)
+      tprint(v, indent + 1)
+    elseif type(v) == "boolean" then
+      print(formatting .. tostring(v))
+    else
+      print(formatting .. v)
+    end
+  end
+end
+
+-- Function to remove zero-width characters
+function remove_zero_width_chars(str)
+  return str:gsub("[\226\128\188\226\128\189\226\128\188]", "") -- Remove ZWJ and similar invisible characters
+end
+--
+-- local pr_list = {
+--   { "Test2", 1, "Initial PR for testing." },
+--   { "PR with special char å", 2, "This PR contains a special character." },
+--   { "Fix issue with zero-width characters", 3, "Fixes zero-width space issue in PR titles." },
+--   { "Update documentation", 4, "Improves the README file and updates doc links." },
+--   { "Feature: New functionality", 5, "Adds a new feature for user authentication." },
+-- }
 
 -- Helper function to get the current repository slug (username/repo) from the current Git directory
 local function get_git_repo_slug(callback)
@@ -76,32 +107,94 @@ function M.list_prs()
           result = table.concat(result, "\n") -- Convert table to string
         end
 
+        local pr_list = {}
         if return_val == 0 then
           print("Pull Requests:")
           -- Use vim.json.decode on the string
           local pr_data = vim.json.decode(result)
           if pr_data and pr_data.values then
-            local pr_list = {}
-            -- Create a list of pull request titles and IDs for the picker
             for _, pr in ipairs(pr_data.values) do
-              table.insert(pr_list, { pr.title, pr.id }) -- Proper format with 'title' and 'id'
-            end
+              -- Extract title, id, and description (default to "No description available" if description is nil)
+              local title = pr.title
+              local id = pr.id
+              local description = pr.description or "No description available"
+              local author_display_name = pr.author.display_name
 
+              -- Insert the pr data into pr_list
+              table.insert(pr_list, { title, id, description })
+            end
+            print("Start here...")
+            print(tprint(pr_list))
+            print("End here.....")
             -- Schedule the Telescope picker UI outside the job callback
             vim.schedule(function()
               -- Open a Telescope picker with the PR titles
               require("telescope.pickers")
                 .new({}, {
                   prompt_title = "Bitbucket Pull Requests",
+
                   finder = require("telescope.finders").new_table({
                     results = pr_list,
+                    entry_maker = function(entry)
+                      return {
+                        value = entry,
+                        display = entry[1], -- Display the title
+                        ordinal = entry[1], -- Use the title for sorting
+                      }
+                    end,
                   }),
+
                   sorter = require("telescope.sorters").get_generic_fuzzy_sorter(),
+                  previewer = require("telescope.previewers").new_buffer_previewer({
+                    define_preview = function(self, entry, status)
+                      -- Schedule the preview update to run safely within Neovim's event loop
+                      print("Preview..", entry[1]) -- Display the PR title for debugging
+                      vim.schedule(function()
+                        -- Use a fallback description if it's nil
+                        local description = entry[3] or "No description available"
+
+                        -- Split the description into separate lines in case there are newlines
+                        local description_lines = {}
+                        for line in description:gmatch("[^\n]+") do
+                          table.insert(description_lines, line)
+                        end
+
+                        -- Set the lines for the preview buffer
+                        vim.api.nvim_buf_set_lines(
+                          self.state.bufnr,
+                          0, -- Start at line 0
+                          -1, -- End at the last line
+                          false, -- Don't use the 'strict' flag
+                          { "Description: " } -- Add a label before the description
+                        )
+
+                        -- Append the description lines to the buffer
+                        vim.api.nvim_buf_set_lines(
+                          self.state.bufnr,
+                          1, -- Start from line 1 (after the label)
+                          -1, -- Continue to the last line
+                          false, -- Don't use the 'strict' flag
+                          description_lines -- Insert the description lines
+                        )
+                      end)
+                    end,
+                  }),
                   attach_mappings = function(prompt_bufnr, map)
                     map("i", "<CR>", function()
                       local selection = require("telescope.actions.state").get_selected_entry()
-                      print("Opening PR ID: " .. selection[2]) -- Use selection[2] for the PR ID
+                      print("Selecting PR....")
+                      print(vim.inspect(selection)) -- Use vim.inspect to print the selection table
+                      -- Ensure you're accessing the PR ID and not an undefined index
+                      print("PR ID: " .. selection.value[2]) -- Access PR ID from the selection value
+
                       -- Here, you could open the PR URL or display more details if needed
+                      -- Example: You could open the PR URL using the PR ID
+                      local pr_url = string.format(
+                        "https://bitbucket.org/chapssrijan619/test_repo/pull-requests/%s",
+                        selection.value[2]
+                      )
+                      print("Opening PR: " .. pr_url)
+                      -- You can open the PR URL in a browser or perform other actions here
                     end)
                     return true
                   end,
