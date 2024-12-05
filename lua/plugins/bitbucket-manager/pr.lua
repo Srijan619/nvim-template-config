@@ -109,7 +109,6 @@ function M.list_prs()
 
         local pr_list = {}
         if return_val == 0 then
-          print("Pull Requests:")
           -- Use vim.json.decode on the string
           local pr_data = vim.json.decode(result)
           if pr_data and pr_data.values then
@@ -121,10 +120,10 @@ function M.list_prs()
               local author_display_name = pr.author.display_name
 
               -- Insert the pr data into pr_list
-              table.insert(pr_list, { title, id, description })
+              table.insert(pr_list, { title, id, description, author_display_name })
             end
             print("Start here...")
-            print(tprint(pr_list))
+            print(pr_list)
             print("End here.....")
             -- Schedule the Telescope picker UI outside the job callback
             vim.schedule(function()
@@ -138,7 +137,7 @@ function M.list_prs()
                     entry_maker = function(entry)
                       return {
                         value = entry,
-                        display = entry[1], -- Display the title
+                        display = string.format("%s - %s", entry[1], entry[4]), -- Title and Author in display
                         ordinal = entry[1], -- Use the title for sorting
                       }
                     end,
