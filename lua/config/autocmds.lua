@@ -2,3 +2,11 @@
 -- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
 -- Add any additional autocmds here
 vim.cmd([[ autocmd BufRead,BufNewFile *.coffee set filetype=coffee ]])
+
+-- Auto format Go files on save
+vim.cmd([[
+  augroup GoAutoFmt
+    autocmd!
+    autocmd BufWritePre *.go :GoFmt
+  augroup END
+]])

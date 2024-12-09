@@ -22,25 +22,45 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.typescript" },
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.ui.mini-animate" },
-
     {
-      dir = "~/.config/nvim/lua/plugins/wpro-component-publish",
-      name = "wpro-component-publish",
+      "ray-x/go.nvim",
+      dependencies = { -- optional packages
+        "ray-x/guihua.lua",
+        "neovim/nvim-lspconfig",
+        "nvim-treesitter/nvim-treesitter",
+      },
       config = function()
-        require("plugins.wpro-component-publish")
+        require("go").setup({
+          -- Enable LSP (language server protocol)
+          lsp_cfg = true, -- This will automatically setup the LSP
+          lsp_gopls = true, -- Ensure gopls is enabled
+        })
       end,
+      event = { "CmdlineEnter" },
+      ft = { "go", "gomod" },
+      build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
     },
+    -- {
+    --   dir = "~/.config/nvim/lua/plugins/wpro-component-publish.lua",
+    --   name = "wpro-component-publish",
+    --   config = function()
+    --     require("plugins.wpro-component-publish")
+    --   end,
+    -- },
     {
       "MeanderingProgrammer/render-markdown.nvim",
+      dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+      ---@module 'render-markdown'
+      ---@type render.md.UserConfig
     },
-    {
-      dir = "~/.config/nvim/lua/plugins/coffeescript",
-      name = "coffeescript",
-      ft = "coffee",
-      config = function()
-        require("plugins.coffeescript").setup()
-      end,
-    },
+    -- {
+    --   dir = "~/.config/nvim/lua/plugins/coffeescript.lua",
+    --   name = "coffeescript",
+    --   ft = "coffee",
+    --   config = function()
+    --     require("plugins.coffeescript").setup()
+    --   end,
+    -- },
     {
       "f-person/git-blame.nvim",
     },
