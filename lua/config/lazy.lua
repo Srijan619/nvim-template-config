@@ -24,7 +24,7 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.ui.mini-animate" },
 
     {
-      dir = "~/.config/nvim/lua/plugins/wpro-component-publish",
+      dir = "/Users/srijanchapagain/.config/nvim/lua/plugins/wpro-component-publish",
       name = "wpro-component-publish",
       config = function()
         require("plugins.wpro-component-publish")
@@ -33,14 +33,14 @@ require("lazy").setup({
     {
       "MeanderingProgrammer/render-markdown.nvim",
     },
-    {
-      dir = "~/.config/nvim/lua/plugins/coffeescript",
-      name = "coffeescript",
-      ft = "coffee",
-      config = function()
-        require("plugins.coffeescript").setup()
-      end,
-    },
+    -- {
+    --   dir = "~/.config/nvim/lua/plugins/coffeescript",
+    --   name = "coffeescript",
+    --   ft = "coffee",
+    --   config = function()
+    --     require("plugins.coffeescript").setup()
+    --   end,
+    -- },
     {
       "f-person/git-blame.nvim",
     },
