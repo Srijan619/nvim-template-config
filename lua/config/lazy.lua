@@ -29,6 +29,8 @@ require("lazy").setup({
         "neovim/nvim-lspconfig",
         "nvim-treesitter/nvim-treesitter",
       },
+      dir = "/Users/srijanchapagain/.config/nvim/lua/plugins/wpro-component-publish",
+      name = "wpro-component-publish",
       config = function()
         require("go").setup({
           -- Enable LSP (language server protocol)
@@ -54,7 +56,7 @@ require("lazy").setup({
       ---@type render.md.UserConfig
     },
     -- {
-    --   dir = "~/.config/nvim/lua/plugins/coffeescript.lua",
+    --   dir = "~/.config/nvim/lua/plugins/coffeescript",
     --   name = "coffeescript",
     --   ft = "coffee",
     --   config = function()
