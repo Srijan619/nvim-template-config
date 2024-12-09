@@ -42,27 +42,14 @@ require("lazy").setup({
       ft = { "go", "gomod" },
       build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
     },
-    -- {
-    --   dir = "~/.config/nvim/lua/plugins/wpro-component-publish.lua",
-    --   name = "wpro-component-publish",
-    --   config = function()
-    --     require("plugins.wpro-component-publish")
-    --   end,
-    -- },
+
     {
       "MeanderingProgrammer/render-markdown.nvim",
       dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
       ---@module 'render-markdown'
       ---@type render.md.UserConfig
     },
-    -- {
-    --   dir = "~/.config/nvim/lua/plugins/coffeescript",
-    --   name = "coffeescript",
-    --   ft = "coffee",
-    --   config = function()
-    --     require("plugins.coffeescript").setup()
-    --   end,
-    -- },
+
     {
       "f-person/git-blame.nvim",
     },
