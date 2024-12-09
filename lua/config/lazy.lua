@@ -23,13 +23,6 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.ui.mini-animate" },
     {
-      dir = "/Users/srijanchapagain/.config/nvim/lua/plugins/wpro-component-publish",
-      name = "wpro-component-publish",
-      config = function()
-        require("plugins.wpro-component-publish")
-      end,
-    },
-    {
       "ray-x/go.nvim",
       dependencies = { -- optional packages
         "ray-x/guihua.lua",
