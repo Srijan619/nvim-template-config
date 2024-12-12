@@ -33,14 +33,14 @@ require("lazy").setup({
     {
       "MeanderingProgrammer/render-markdown.nvim",
     },
-    -- {
-    --   dir = "~/.config/nvim/lua/plugins/coffeescript",
-    --   name = "coffeescript",
-    --   ft = "coffee",
-    --   config = function()
-    --     require("plugins.coffeescript").setup()
-    --   end,
-    -- },
+    {
+      dir = "~/.config/nvim/lua/plugins/coffeescript",
+      name = "coffeescript",
+      ft = "coffee",
+      config = function()
+        require("plugins.coffeescript").setup()
+      end,
+    },
     {
       "f-person/git-blame.nvim",
     },
