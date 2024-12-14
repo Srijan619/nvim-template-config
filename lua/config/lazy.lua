@@ -88,15 +88,8 @@ require("lazy").setup({
     { import = "plugins.frontend" },
     { import = "plugins.live-grep" },
     { import = "plugins.lspconfig" },
-    {
-      "nvim-neotest/neotest",
-      dependencies = {
-        "nvim-neotest/nvim-nio",
-        "nvim-lua/plenary.nvim",
-        "antoinemadec/FixCursorHold.nvim",
-        "nvim-treesitter/nvim-treesitter",
-      },
-    },
+    { import = "plugins.neotest" },
+
     -- { import = "plugins" },
   },
   defaults = {
