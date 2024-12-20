@@ -48,14 +48,6 @@ require("lazy").setup({
       ---@type render.md.UserConfig
     },
     {
-      dir = "~/.config/nvim/lua/plugins/coffeescript",
-      name = "coffeescript",
-      ft = "coffee",
-      config = function()
-        require("plugins.coffeescript").setup()
-      end,
-    },
-    {
       "f-person/git-blame.nvim",
     },
     {
@@ -97,6 +89,21 @@ require("lazy").setup({
     { import = "plugins.frontend" },
     { import = "plugins.live-grep" },
     { import = "plugins.lspconfig" },
+    {
+      dir = "~/.config/nvim/lua/plugins/coffeescript",
+      name = "coffeescript",
+      ft = "coffee",
+      config = function()
+        require("plugins.coffeescript").setup()
+      end,
+    },
+    {
+      dir = "~/.config/nvim/lua/plugins/wpro-component-publish",
+      name = "wpro-component-publish",
+      config = function()
+        require("plugins.wpro-component-publish")
+      end,
+    },
     {
       "nvim-neotest/neotest",
       dependencies = {
