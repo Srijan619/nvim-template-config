@@ -36,6 +36,7 @@ require("lazy").setup({
           lsp_gopls = true, -- Ensure gopls is enabled
         })
       end,
+      lazy = true,
       event = { "CmdlineEnter" },
       ft = { "go", "gomod" },
       build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
@@ -89,6 +90,7 @@ require("lazy").setup({
     { import = "plugins.frontend" },
     { import = "plugins.live-grep" },
     { import = "plugins.lspconfig" },
+    { import = "plugins.fterm" },
     {
       dir = "~/.config/nvim/lua/plugins/coffeescript",
       name = "coffeescript",
