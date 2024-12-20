@@ -92,13 +92,6 @@ require("lazy").setup({
         { "<S-u>", "<cmd>lua require('undotree').toggle()<CR>", mode = "n" }, -- Normal mode mapping
       },
     },
-    {
-      dir = "~/.config/nvim/lua/plugins/bitbucket-manager",
-      name = "bitbucket-manager",
-      config = function()
-        require("plugins.bitbucket-manager")
-      end,
-    },
     ---
     { import = "plugins.fold" },
     { import = "plugins.frontend" },
