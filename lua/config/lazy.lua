@@ -54,25 +54,20 @@ require("lazy").setup({
     -- THEMES
     {
       "projekt0n/github-nvim-theme",
-      lazy = false,
-      priority = 999,
     },
 
     {
       "sho-87/kanagawa-paper.nvim",
-      lazy = false,
-      priority = 1000,
-      opts = {},
-      config = function()
-        -- vim.cmd("colorscheme kanagawa-paper")
-      end,
     },
     {
       "rebelot/kanagawa.nvim",
+    },
+
+    {
+      "marko-cerovac/material.nvim",
       lazy = false,
-      priority = 1000,
       config = function()
-        vim.cmd("colorscheme kanagawa")
+        vim.cmd("colorscheme material-darker")
       end,
     },
     {
