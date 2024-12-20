@@ -22,16 +22,30 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.typescript" },
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.ui.mini-animate" },
+    {
+      "ray-x/go.nvim",
+      dependencies = { -- optional packages
+        "ray-x/guihua.lua",
+        "neovim/nvim-lspconfig",
+        "nvim-treesitter/nvim-treesitter",
+      },
+      config = function()
+        require("go").setup({
+          -- Enable LSP (language server protocol)
+          lsp_cfg = true, -- This will automatically setup the LSP
+          lsp_gopls = true, -- Ensure gopls is enabled
+        })
+      end,
+      event = { "CmdlineEnter" },
+      ft = { "go", "gomod" },
+      build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
+    },
 
     {
-      dir = "/Users/srijanchapagain/.config/nvim/lua/plugins/wpro-component-publish",
-      name = "wpro-component-publish",
-      config = function()
-        require("plugins.wpro-component-publish")
-      end,
-    },
-    {
       "MeanderingProgrammer/render-markdown.nvim",
+      dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+      ---@module 'render-markdown'
+      ---@type render.md.UserConfig
     },
     {
       dir = "~/.config/nvim/lua/plugins/coffeescript",
@@ -77,6 +91,13 @@ require("lazy").setup({
       keys = {
         { "<S-u>", "<cmd>lua require('undotree').toggle()<CR>", mode = "n" }, -- Normal mode mapping
       },
+    },
+    {
+      dir = "~/.config/nvim/lua/plugins/bitbucket-manager",
+      name = "bitbucket-manager",
+      config = function()
+        require("plugins.bitbucket-manager")
+      end,
     },
     ---
     { import = "plugins.fold" },
