@@ -22,25 +22,6 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.typescript" },
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.ui.mini-animate" },
-    {
-      "ray-x/go.nvim",
-      dependencies = { -- optional packages
-        "ray-x/guihua.lua",
-        "neovim/nvim-lspconfig",
-        "nvim-treesitter/nvim-treesitter",
-      },
-      config = function()
-        require("go").setup({
-          -- Enable LSP (language server protocol)
-          lsp_cfg = true, -- This will automatically setup the LSP
-          lsp_gopls = true, -- Ensure gopls is enabled
-        })
-      end,
-      lazy = true,
-      event = { "CmdlineEnter" },
-      ft = { "go", "gomod" },
-      build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
-    },
 
     {
       "MeanderingProgrammer/render-markdown.nvim",
@@ -87,9 +68,9 @@ require("lazy").setup({
     },
     ---
     { import = "plugins.fold" },
-    { import = "plugins.frontend" },
+    --{ import = "plugins.frontend" },
     { import = "plugins.live-grep" },
-    { import = "plugins.lspconfig" },
+    --{ import = "plugins.lspconfig" },
     { import = "plugins.fterm" },
     {
       dir = "~/.config/nvim/lua/plugins/coffeescript",
