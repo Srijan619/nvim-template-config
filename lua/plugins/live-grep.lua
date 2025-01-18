@@ -27,7 +27,7 @@ return {
           end)
           -- Bind Ctrl + r for *.ruby files
           map("i", "<C-r>", function(prompt_bufnr)
-            lga_actions.quote_prompt({ postfix = " -g *.ruby" })(prompt_bufnr)
+            lga_actions.quote_prompt({ postfix = " -g *.rb" })(prompt_bufnr)
           end)
           -- Bind Ctrl + t for *.ts and *.tsx files
           map("i", "<C-t>", function(prompt_bufnr)

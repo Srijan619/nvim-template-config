@@ -24,22 +24,10 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.ui.mini-animate" },
 
     {
-      dir = "/Users/srijanchapagain/.config/nvim/lua/plugins/wpro-component-publish",
-      name = "wpro-component-publish",
-      config = function()
-        require("plugins.wpro-component-publish")
-      end,
-    },
-    {
       "MeanderingProgrammer/render-markdown.nvim",
-    },
-    {
-      dir = "~/.config/nvim/lua/plugins/coffeescript",
-      name = "coffeescript",
-      ft = "coffee",
-      config = function()
-        require("plugins.coffeescript").setup()
-      end,
+      dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+      ---@module 'render-markdown'
+      ---@type render.md.UserConfig
     },
     {
       "f-person/git-blame.nvim",
@@ -54,25 +42,20 @@ require("lazy").setup({
     -- THEMES
     {
       "projekt0n/github-nvim-theme",
-      lazy = false,
-      priority = 999,
     },
 
     {
       "sho-87/kanagawa-paper.nvim",
-      lazy = false,
-      priority = 1000,
-      opts = {},
-      config = function()
-        -- vim.cmd("colorscheme kanagawa-paper")
-      end,
     },
     {
       "rebelot/kanagawa.nvim",
+    },
+
+    {
+      "marko-cerovac/material.nvim",
       lazy = false,
-      priority = 1000,
       config = function()
-        vim.cmd("colorscheme kanagawa")
+        vim.cmd("colorscheme material-darker")
       end,
     },
     {
@@ -90,6 +73,23 @@ require("lazy").setup({
     { import = "plugins.lspconfig" },
     { import = "plugins.neotest" },
 
+    --{ import = "plugins.lspconfig" },
+    { import = "plugins.fterm" },
+    {
+      dir = "~/.config/nvim/lua/plugins/coffeescript",
+      name = "coffeescript",
+      ft = "coffee",
+      config = function()
+        require("plugins.coffeescript").setup()
+      end,
+    },
+    {
+      dir = "~/.config/nvim/lua/plugins/wpro-component-publish",
+      name = "wpro-component-publish",
+      config = function()
+        require("plugins.wpro-component-publish")
+      end,
+    },
     -- { import = "plugins" },
   },
   defaults = {
