@@ -55,6 +55,12 @@ require("lazy").setup({
       "marko-cerovac/material.nvim",
       lazy = false,
       config = function()
+        require("material").setup({
+          disable = {
+            background = true,
+          },
+          style = "darker",
+        })
         vim.cmd("colorscheme material-darker")
       end,
     },
