@@ -103,7 +103,7 @@ local function npm_run_build_comp_async(build_dir, on_build_complete)
     return
   end
 
-  local command = "nvm use 14 && npm run build"
+  local command = "nvm use 14.15.3 && npm run build"
   vim.schedule(function()
     vim.api.nvim_out_write("Running npm run build...\n")
   end)

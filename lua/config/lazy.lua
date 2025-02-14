@@ -61,7 +61,7 @@ require("lazy").setup({
           },
           style = "darker",
         })
-        vim.cmd("colorscheme material-darker")
+        vim.cmd("colorscheme material-oceanic")
       end,
     },
     {

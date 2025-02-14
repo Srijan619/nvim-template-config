@@ -1,6 +1,6 @@
 -- NOTE: Make sure typescript , typescript-language-server and prettier is installed either locally in the workspace or globally
-return {
 
+return {
   {
     "jose-elias-alvarez/null-ls.nvim",
     config = function()
@@ -9,7 +9,10 @@ return {
       -- Setup null-ls
       null_ls.setup({
         sources = {
-          null_ls.builtins.formatting.prettier,
+          -- Setup Prettier for formatting .vue files
+          null_ls.builtins.formatting.prettier.with({
+            extra_filetypes = { "vue" },
+          }),
         },
         on_attach = function(client, bufnr)
           -- Add auto-format on save
