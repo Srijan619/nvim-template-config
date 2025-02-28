@@ -172,19 +172,130 @@ local function run_publish_script_async(yaml_file_path)
   end)
 end
 
--- Modified Neovim command to use async functions
+local function run_copy_yaml_async(yaml_file_path, on_copy_complete)
+  -- Determine the YAML file path to use
+  if not yaml_file_path or yaml_file_path == "" then
+    yaml_file_path = get_latest_yaml_file()
+  else
+    yaml_file_path = yaml_file_path .. "/dist"
+  end
+
+  -- Check if the file path is valid
+  if not yaml_file_path or yaml_file_path == "" then
+    return
+  end
+
+  -- Get the latest YAML file path
+  local quoted_yaml_file_path = vim.fn.shellescape(yaml_file_path)
+
+  -- Print the YAML file path
+  vim.schedule(function()
+    vim.api.nvim_out_write(string.format("Using YAML file: %s \n", quoted_yaml_file_path))
+  end)
+
+  -- Define the destination directory
+  local dest_dir = vim.fn.expand("~") .. "/workspace/server/Server/Plugins/Client/fixtures/components"
+  local quoted_dest_dir = vim.fn.shellescape(dest_dir)
+
+  -- Command to copy the YAML file to the target directory, force replace if exists
+  local cmd = string.format("cp -f %s %s", quoted_yaml_file_path, quoted_dest_dir)
+
+  -- Notify that the copy process is starting
+  vim.schedule(function()
+    vim.api.nvim_out_write("Copying YAML file...\n")
+  end)
+
+  -- Run the command asynchronously
+  run_command_async(cmd, function(output)
+    vim.schedule(function()
+      vim.api.nvim_out_write(output)
+    end)
+  end, function(exit_code)
+    vim.schedule(function()
+      if exit_code == 0 then
+        vim.api.nvim_out_write("YAML file copied successfully.\n")
+        if on_copy_complete then
+          on_copy_complete()
+        end
+      else
+        vim.api.nvim_err_writeln("Failed to copy YAML file.")
+      end
+    end)
+  end)
+end
+
+local function trigger_rerunFixtures_in_ant_pane()
+  local find_pane_cmd = "wezterm cli list | awk '/ant/ {print $3}'"
+  vim.fn.jobstart(find_pane_cmd, {
+    on_stdout = function(_, data)
+      local pane_id = nil
+      for _, line in ipairs(data) do
+        if line and line ~= "" then
+          pane_id = line
+          break
+        end
+      end
+
+      if pane_id then
+        local send_cmd =
+          string.format('echo "rerunFixtures\\r" | wezterm cli send-text --pane-id %s --no-paste', pane_id)
+        vim.fn.jobstart(send_cmd, {
+          on_exit = function(_, code)
+            if code == 0 then
+              vim.schedule(function()
+                vim.api.nvim_out_write("Sent rerunFixtures to pane " .. pane_id .. "\n")
+              end)
+            else
+              vim.schedule(function()
+                vim.api.nvim_err_writeln("Failed to send command to pane " .. pane_id)
+              end)
+            end
+          end,
+        })
+      else
+        vim.schedule(function()
+          vim.api.nvim_err_writeln("Could not find pane ID matching 'ant'")
+        end)
+      end
+    end,
+    on_exit = function(_, code)
+      if code ~= 0 then
+        vim.schedule(function()
+          vim.api.nvim_err_writeln("Failed to execute wezterm cli list command")
+        end)
+      end
+    end,
+    stdout_buffered = true,
+  })
+end
+
+-- Publishes component as org's own component and runs publish for whole service
 vim.api.nvim_create_user_command("PublishWellmoComponent", function(opts)
   vim.schedule(function()
     vim.api.nvim_out_write("Executing publish wellmo component command.\n")
   end)
-  -- First, build the component asynchronously
   npm_run_build_comp_async(opts.args, function()
-    -- Then, after build completion, run the publish script
     run_publish_script_async(opts.args)
   end)
 end, {
-  nargs = "?", -- Make the argument optional
+  nargs = "?",
+  complete = "file",
+})
+
+-- Runs local component update i.e builds component and replaces component in fixtures (Need to manually run rerunfixtures in JDE)
+vim.api.nvim_create_user_command("UpdateLocalWellmoComponent", function(opts)
+  vim.schedule(function()
+    vim.api.nvim_out_write("Executing publish wellmo component command.\n")
+  end)
+  npm_run_build_comp_async(opts.args, function()
+    run_copy_yaml_async(opts.args, function()
+      trigger_rerunFixtures_in_ant_pane()
+    end)
+  end)
+end, {
+  nargs = "?",
   complete = "file",
 })
 
 vim.api.nvim_set_keymap("n", "<leader>pwc", ":PublishWellmoComponent", { noremap = true, silent = false })
+vim.api.nvim_set_keymap("n", "<leader>pwl", ":UpdateLocalWellmoComponent", { noremap = true, silent = false })
