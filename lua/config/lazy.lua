@@ -45,9 +45,6 @@ require("lazy").setup({
     },
 
     {
-      "sho-87/kanagawa-paper.nvim",
-    },
-    {
       "rebelot/kanagawa.nvim",
     },
 
