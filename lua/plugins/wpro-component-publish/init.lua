@@ -103,7 +103,7 @@ local function npm_run_build_comp_async(build_dir, on_build_complete)
     return
   end
 
-  local command = "nvm use 14.15.3 && npm run build"
+  local command = "nvm use 20 && npm run build"
   vim.schedule(function()
     vim.api.nvim_out_write("Running npm run build...\n")
   end)
@@ -225,7 +225,7 @@ local function run_copy_yaml_async(yaml_file_path, on_copy_complete)
 end
 
 local function trigger_rerunFixtures_in_ant_pane()
-  local find_pane_cmd = "wezterm cli list | awk '/ant/ {print $3}'"
+  local find_pane_cmd = "wezterm cli list | awk '/env.server/ {print $3}'"
   vim.fn.jobstart(find_pane_cmd, {
     on_stdout = function(_, data)
       local pane_id = nil

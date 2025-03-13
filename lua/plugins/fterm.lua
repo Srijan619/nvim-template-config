@@ -4,12 +4,12 @@ return {
     "numToStr/FTerm.nvim",
     config = function()
       require("FTerm").setup({
-        border = "double",
+        border = "rounded",
         dimensions = {
-          height = 1,
-          width = 1,
+          height = 0.5,
+          width = 0.5,
         },
-        blend = 6,
+        blend = 30,
       })
     end,
     keys = {
