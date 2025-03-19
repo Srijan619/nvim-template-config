@@ -103,28 +103,40 @@ local function npm_run_build_comp_async(build_dir, on_build_complete)
     return
   end
 
-  local command = "nvm use 20 && npm run build"
-  vim.schedule(function()
-    vim.api.nvim_out_write("Running npm run build...\n")
-  end)
+  local function run_build(node_version, fallback)
+    local command = "nvm use " .. node_version .. " && npm run build"
 
-  run_command_async(command, function(output)
     vim.schedule(function()
-      vim.api.nvim_out_write(output)
+      vim.api.nvim_out_write("Trying to build using Node.js " .. node_version .. "...\n")
     end)
-  end, function(exit_code)
-    vim.schedule(function()
-      if exit_code == 0 then
-        vim.api.nvim_out_write("Npm run build executed successfully in: " .. build_dir .. "\n")
-        -- Only run the publish script after build is complete and successful
-        if on_build_complete then
-          on_build_complete()
+
+    run_command_async(command, function(output)
+      vim.schedule(function()
+        vim.api.nvim_out_write(output)
+      end)
+    end, function(exit_code)
+      vim.schedule(function()
+        if exit_code == 0 then
+          vim.api.nvim_out_write(
+            "Npm run build executed successfully in: " .. build_dir .. " using Node.js " .. node_version .. "\n"
+          )
+          if on_build_complete then
+            on_build_complete()
+          end
+        elseif fallback then
+          vim.api.nvim_err_writeln(
+            "Build failed with Node.js " .. node_version .. ", retrying with Node.js " .. fallback .. "..."
+          )
+          run_build(fallback, nil) -- Retry with fallback version
+        else
+          vim.api.nvim_err_writeln("Failed to run build command. Check your script and file path.")
         end
-      else
-        vim.api.nvim_err_writeln("Failed to run build command. Check your script and file path.")
-      end
+      end)
     end)
-  end)
+  end
+
+  -- Try Node.js 14.15.3 first, fallback to Node.js 20 if it fails
+  run_build("14.15.3", "20")
 end
 
 -- Async function to run the publish script
@@ -225,7 +237,8 @@ local function run_copy_yaml_async(yaml_file_path, on_copy_complete)
 end
 
 local function trigger_rerunFixtures_in_ant_pane()
-  local find_pane_cmd = "wezterm cli list | awk '/env.server/ {print $3}'"
+  local find_pane_cmd = "wezterm cli list | awk '/(env\\.server|ant|donkey)/ {print $3}'"
+
   vim.fn.jobstart(find_pane_cmd, {
     on_stdout = function(_, data)
       local pane_id = nil
@@ -254,7 +267,7 @@ local function trigger_rerunFixtures_in_ant_pane()
         })
       else
         vim.schedule(function()
-          vim.api.nvim_err_writeln("Could not find pane ID matching 'ant'")
+          vim.api.nvim_err_writeln("Could not find pane ID matching 'ant | env.server | donkey'")
         end)
       end
     end,
