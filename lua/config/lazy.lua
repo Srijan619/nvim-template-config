@@ -68,7 +68,8 @@ require("lazy").setup({
       },
     },
     ---
-    { import = "plugins.frontend" },
+    { import = "plugins.fold" },
+    -- { import = "plugins.frontend" },
     { import = "plugins.live-grep" },
     --{ import = "plugins.lspconfig" },
     { import = "plugins.fterm" },
