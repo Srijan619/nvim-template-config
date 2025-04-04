@@ -140,7 +140,7 @@ local function npm_run_build_comp_async(build_dir, on_build_complete)
 end
 
 -- Async function to run the publish script
-local function run_publish_script_async(yaml_file_path)
+local function run_publish_script_async(yaml_file_path, on_publish_complete)
   -- Determine the YAML file path to use
   if not yaml_file_path or yaml_file_path == "" then
     yaml_file_path = get_latest_yaml_file()
@@ -177,6 +177,9 @@ local function run_publish_script_async(yaml_file_path)
     vim.schedule(function()
       if exit_code == 0 then
         vim.api.nvim_out_write("Publish script executed successfully.\n")
+        if on_publish_complete then
+          on_publish_complete()
+        end
       else
         vim.api.nvim_err_writeln("Failed to run publish script.")
       end
@@ -236,7 +239,7 @@ local function run_copy_yaml_async(yaml_file_path, on_copy_complete)
   end)
 end
 
-local function trigger_rerunFixtures_in_ant_pane()
+local function trigger_rerunFixtures_in_ant_pane(on_trigger_complete)
   local find_pane_cmd = "wezterm cli list | awk '/(env\\.server|ant|donkey)/ {print $3}'"
 
   vim.fn.jobstart(find_pane_cmd, {
@@ -257,6 +260,9 @@ local function trigger_rerunFixtures_in_ant_pane()
             if code == 0 then
               vim.schedule(function()
                 vim.api.nvim_out_write("Sent rerunFixtures to pane " .. pane_id .. "\n")
+                if on_trigger_complete then
+                  on_trigger_complete()
+                end
               end)
             else
               vim.schedule(function()
@@ -282,13 +288,32 @@ local function trigger_rerunFixtures_in_ant_pane()
   })
 end
 
+local function clear_redis_cache()
+  local cmd = "redis-cli KEYS '''SERVICE_SET:*''' | xargs redis-cli DEL"
+  run_command_async(cmd, function(output)
+    vim.schedule(function()
+      vim.api.nvim_out_write(output)
+    end)
+  end, function(exit_code)
+    vim.schedule(function()
+      if exit_code == 0 then
+        vim.api.nvim_out_write("Redis SERVICE_SET cache cleared successfully.\n")
+      else
+        vim.api.nvim_err_writeln("Failed to clear Redis cache: SERVICE_SET")
+      end
+    end)
+  end)
+end
+
 -- Publishes component as org's own component and runs publish for whole service
 vim.api.nvim_create_user_command("PublishWellmoComponent", function(opts)
   vim.schedule(function()
     vim.api.nvim_out_write("Executing publish wellmo component command.\n")
   end)
   npm_run_build_comp_async(opts.args, function()
-    run_publish_script_async(opts.args)
+    run_publish_script_async(opts.args, function()
+      clear_redis_cache()
+    end)
   end)
 end, {
   nargs = "?",
@@ -302,7 +327,9 @@ vim.api.nvim_create_user_command("UpdateLocalWellmoComponent", function(opts)
   end)
   npm_run_build_comp_async(opts.args, function()
     run_copy_yaml_async(opts.args, function()
-      trigger_rerunFixtures_in_ant_pane()
+      trigger_rerunFixtures_in_ant_pane(function()
+        clear_redis_cache()
+      end)
     end)
   end)
 end, {
