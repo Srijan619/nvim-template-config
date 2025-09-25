@@ -24,12 +24,6 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.ui.mini-animate" },
 
     {
-      "MeanderingProgrammer/render-markdown.nvim",
-      dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
-      ---@module 'render-markdown'
-      ---@type render.md.UserConfig
-    },
-    {
       "f-person/git-blame.nvim",
     },
     {
@@ -57,6 +51,8 @@ require("lazy").setup({
         vim.g.everforest_diagnostic_text_highlight = 1
         vim.g.everforest_diagnostic_line_highlight = 1
         vim.g.everforest_diagnostic_virtual_text = "colored"
+
+        vim.cmd("colorscheme everforest")
       end,
     },
     {
@@ -68,7 +64,7 @@ require("lazy").setup({
       },
     },
     ---
-    { import = "plugins.fold" },
+    -- { import = "plugins.fold" },
     -- { import = "plugins.frontend" },
     { import = "plugins.live-grep" },
     --{ import = "plugins.lspconfig" },
